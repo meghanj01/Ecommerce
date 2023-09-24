@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, Blueprint, g
 from .validations import validate_post_products, validate_post_users
-from .product_models import (
+from .models.product_models import (
     insert_product,
     get_all_products,
     check_product_id,
@@ -9,7 +9,7 @@ from .product_models import (
     delete_product,
     check_product_quantity,
 )
-from .users_model import (
+from .models.users_model import (
     is_admin,
     insert_user,
     get_all_users,
@@ -18,13 +18,18 @@ from .users_model import (
     check_user_id,
     update_user,
 )
-from .cart_models import (
+from .models.cart_models import (
     insert_cart,
     insert_cart_products,
     update_cart_products,
     get_cart_by_user_id,
     delete_cart_item,
     delete_cart,
+)
+from .models.order_models import (
+    insert_order_products,
+    get_order_by_user_id,
+    delete_order_item,
 )
 from .convertor import encrypt_password
 
@@ -209,7 +214,7 @@ def cart(id):
             "id": id,
             "product_id": request.args.get("product_id"),
         }
-        delete_cart_item(conn, id)
+        delete_cart_item(conn, req)
         return jsonify(message=f"cart item is deleted deleted successfully", status=200)
 
 
@@ -218,3 +223,46 @@ def empty_cart(id):
     conn = g.db_connection
     delete_cart(conn, id)
     return jsonify(message=f"cart items are deleted deleted successfully", status=200)
+
+
+@ecommerce.route("/users/<int:id>/orders", methods=["GET", "DELETE", "POST"])
+def order(id):
+    conn = g.db_connection
+    if request.method == "POST":
+        if not request.is_json:
+            return jsonify(message="Data is not in json format", status=400)
+        data = request.get_json()
+        req = []
+        for val in data:
+            req.append(
+                {"product_id": val.get("product_id"), "quantity": val.get("quantity")}
+            )
+        check_user_id(conn, id)
+        for r in req:
+            check_product_id(conn, r["product_id"])
+            check_product_quantity(conn, (r["product_id"], r["quantity"]))
+        insert_order_products(conn, req, id)
+        return jsonify(message="your order is successfull", status=200)
+    elif request.method == "GET":
+        inventories = get_order_by_user_id(conn, id)
+        result = []
+        for inventory in inventories:
+            result.append(
+                {
+                    "order_id": inventory["order_id"]
+                    "product_id": inventory["product_id"],
+                    "product_name": inventory["name"],
+                    "quantity": inventory["quantity"],
+                    "price": inventory["price"],
+                }
+            )
+        return jsonify(message=result, status=200)
+    elif request.method == "DELETE":
+        req = {
+            "id": id,
+            "order_id": request.args.get("order_id"),
+        }
+        delete_order_item(conn, req)
+        return jsonify(
+            message=f"Order : {req['order_id']} cancelled successfully", status=200
+        )

@@ -45,8 +45,8 @@ id INTEGER PRIMARY KEY AUTOINCREMENT,
 cart_id INTEGER NOT NULL,
 product_id INTEGER NOT NULL,
 quantity INTEGER NOT NULL,
-CONSTRAINT fk_cart_id FOREIGN KEY (cart_id) REFERENCES carts(id),
-CONSTRAINT fk_products_id FOREIGN KEY (product_id) REFERENCES products(id)
+CONSTRAINT fk_cart_id FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
+CONSTRAINT fk_products_id FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- Create the 'order_items' table for the many-to-many relationship between Order and Product
@@ -55,6 +55,6 @@ id INTEGER PRIMARY KEY AUTOINCREMENT,
 order_id INTEGER NOT NULL,
 product_id INTEGER NOT NULL,
 quantity INTEGER NOT NULL,
-CONSTRAINT fk_order_id FOREIGN KEY (order_id) REFERENCES orders(id),
+CONSTRAINT fk_order_id FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
 CONSTRAINT fk_products_id FOREIGN KEY (product_id) REFERENCES products(id)
 );

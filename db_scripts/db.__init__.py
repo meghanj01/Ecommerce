@@ -34,12 +34,12 @@ try:
     )
 
     #  Insert data into the 'orders' table (assuming order IDs are auto-generated)
-    cur.execute(
-        """INSERT INTO orders (user_id, order_date)
-    VALUES
-        (1, '2023-09-23 10:00:00'),
-        (1, '2023-09-24 15:30:00');"""
-    )
+    # cur.execute(
+    #     """INSERT INTO orders (user_id, order_date)
+    # VALUES
+    #     (1, '2023-09-23 10:00:00'),
+    #     (1, '2023-09-24 15:30:00');"""
+    # )
 
     #  Insert data into the 'cart_items' table
     cur.execute(
@@ -50,13 +50,13 @@ try:
     )
 
     # Insert data into the 'order_items' table
-    cur.execute(
-        """INSERT INTO order_items (order_id, product_id, quantity)
-    VALUES
-        (1, 1, 2),
-        (1, 2, 1),
-        (2, 3, 5);"""
-    )
+    # cur.execute(
+    #     """INSERT INTO order_items (order_id, product_id, quantity)
+    # VALUES
+    #     (1, 1, 2),
+    #     (1, 2, 1),
+    #     (2, 3, 5);"""
+    # )
 
     # commit the changes
     connection.commit()

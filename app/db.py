@@ -54,7 +54,7 @@ def get_all_records_by_id(connection, query, id):
         cursor.execute(query, (id,))
         result = cursor.fetchall()
         return result
-    except sqlite3.Error as e:
+    except Exception as e:
         print(f"Error in get all records {e}")
     finally:
         cursor.close()
@@ -65,6 +65,8 @@ def check_record(connection, query, params):
         cursor = connection.cursor()
         cursor.execute(query, params)
         result = cursor.fetchone()
+        connection.commit()
+        breakpoint()
         return result
     except Exception as e:
         print(f"Error in  check records {e}")
@@ -79,7 +81,7 @@ def record_by_id(connection, query, params):
         result = cursor.fetchone()
         connection.commit()
         return result
-    except sqlite3.Error as e:
+    except Exception as e:
         print(f"Error in get records by id {e}")
     finally:
         cursor.close()
