@@ -249,7 +249,7 @@ def order(id):
         for inventory in inventories:
             result.append(
                 {
-                    "order_id": inventory["order_id"]
+                    "order_id": inventory["order_id"],
                     "product_id": inventory["product_id"],
                     "product_name": inventory["name"],
                     "quantity": inventory["quantity"],
