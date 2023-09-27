@@ -39,6 +39,15 @@ ecommerce = Blueprint("ecommerce", __name__)
 
 @ecommerce.route("/products", methods=["GET", "POST"])
 def products_list():
+    """
+    List all products or add a new product.
+
+    GET: Get a list of all products.
+    POST: Add a new product to the database.
+
+    Returns:
+        JSON response with product data.
+    """
     conn = g.db_connection
     if request.method == "POST":
         if not request.is_json:
@@ -68,6 +77,19 @@ def products_list():
 
 @ecommerce.route("/products/<int:id>", methods=["GET", "PUT", "DELETE"])
 def products_by_id(id):
+    """
+    Get, update, or delete a product by its ID.
+
+    Args:
+        id (int): Product ID.
+
+    GET: Get product details by ID.
+    PUT: Update product details by ID.
+    DELETE: Delete a product by ID.
+
+    Returns:
+        JSON response with product data or status message.
+    """
     conn = g.db_connection
     if request.method == "PUT":
         if not request.is_json:
@@ -100,6 +122,15 @@ def products_by_id(id):
 
 @ecommerce.route("/users/admin/<int:id>", methods=["GET"])
 def get_users_admin(id):
+    """
+    Get a list of users with admin privileges.
+
+    Args:
+        id (int): User ID.
+
+    Returns:
+        JSON response with a list of users with admin privileges.
+    """
     conn = g.db_connection
     is_admin(conn, id)
     users = get_all_users(conn)
@@ -117,6 +148,14 @@ def get_users_admin(id):
 
 @ecommerce.route("/users/", methods=["POST"])
 def post_users():
+    """
+    Create a new user.
+
+    POST: Create a new user and add them to the database.
+
+    Returns:
+        JSON response with a success message.
+    """
     conn = g.db_connection
     if not request.is_json:
         return jsonify(message="Data is not in json format", status=400)
@@ -137,6 +176,19 @@ def post_users():
 
 @ecommerce.route("/users/<int:id>", methods=["GET", "PUT", "DELETE"])
 def users_by_id(id):
+    """
+    Get, update, or delete a user by their ID.
+
+    Args:
+        id (int): User ID.
+
+    GET: Get user details by ID.
+    PUT: Update user details by ID.
+    DELETE: Delete a user by ID.
+
+    Returns:
+        JSON response with user data or status message.
+    """
     conn = g.db_connection
     if request.method == "PUT":
         if not request.is_json:
@@ -168,6 +220,20 @@ def users_by_id(id):
 
 @ecommerce.route("/users/<int:id>/cart", methods=["GET", "PUT", "DELETE", "POST"])
 def cart(id):
+    """
+    Get, update, delete, or add items to the user's shopping cart.
+
+    Args:
+        id (int): User ID.
+
+    GET: Get the user's shopping cart items.
+    PUT: Update the quantity of items in the user's shopping cart.
+    POST: Add items to the user's shopping cart.
+    DELETE: Delete an item from the user's shopping cart.
+
+    Returns:
+        JSON response with cart data or status message.
+    """
     conn = g.db_connection
     if request.method == "POST":
         if not request.is_json:
@@ -220,6 +286,17 @@ def cart(id):
 
 @ecommerce.route("/users/<int:id>/cart/delete", methods=["DELETE"])
 def empty_cart(id):
+    """
+    Delete all items from the user's shopping cart.
+
+    Args:
+        id (int): User ID.
+
+    DELETE: Delete all items from the user's shopping cart.
+
+    Returns:
+        JSON response with a success message.
+    """
     conn = g.db_connection
     delete_cart(conn, id)
     return jsonify(message=f"cart items are deleted deleted successfully", status=200)
@@ -227,6 +304,19 @@ def empty_cart(id):
 
 @ecommerce.route("/users/<int:id>/orders", methods=["GET", "DELETE", "POST"])
 def order(id):
+    """
+    Get, cancel, or place an order for the user.
+
+    Args:
+        id (int): User ID.
+
+    GET: Get the user's order history.
+    POST: Place an order for the user.
+    DELETE: Cancel an order by its ID.
+
+    Returns:
+        JSON response with order data or status message.
+    """
     conn = g.db_connection
     if request.method == "POST":
         if not request.is_json:

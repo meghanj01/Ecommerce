@@ -4,6 +4,17 @@ from .config import PRODUCT_NAME, USER_NAME, EMAIL, PASSWORD, TRUE, FLASE
 
 
 def validate_post_products(data):
+    """
+    Validate product data before insertion.
+
+    Args:
+        data (dict): Product data including product_name, product_quantity, and price.
+
+    Returns:
+        None
+        Raises:
+            HTTPException: If any validation check fails.
+    """
     if not data["product_name"] or not re.fullmatch(PRODUCT_NAME, data["product_name"]):
         abort(make_response(jsonify(message="Invalid product name", status=400)))
 
@@ -16,6 +27,17 @@ def validate_post_products(data):
 
 
 def validate_post_users(data):
+    """
+    Validate user data before insertion.
+
+    Args:
+        data (dict): User data including user_name, password, email, and is_admin.
+
+    Returns:
+        None
+        Raises:
+            HTTPException: If any validation check fails.
+    """
     if not data["user_name"] or not re.fullmatch(USER_NAME, data["user_name"]):
         abort(make_response(jsonify(message="Invalid user name", status=400)))
 

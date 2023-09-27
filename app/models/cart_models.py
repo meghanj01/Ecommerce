@@ -9,6 +9,18 @@ from flask import abort, make_response, jsonify
 
 
 def insert_cart(conn, user_id):
+    """
+    Insert a cart for a user into the database.
+
+    Args:
+        conn: Database connection.
+        user_id (int): User ID for whom the cart is created.
+
+    Returns:
+        None
+        Raises:
+            HTTPException: If cart creation fails.
+    """
     query = """
             INSERT INTO carts (user_id)
             VALUES (?);
@@ -23,6 +35,18 @@ def insert_cart(conn, user_id):
 
 
 def insert_cart_products(conn, data):
+    """
+    Insert cart items into the database.
+
+    Args:
+        conn: Database connection.
+        data (list): List of cart item data, each containing product_id and quantity.
+
+    Returns:
+        None
+        Raises:
+            HTTPException: If insertion fails.
+    """
     query = """
             INSERT INTO cart_items (cart_id, product_id, quantity)
             VALUES ((select id from carts where user_id = ?),?,?);
@@ -35,6 +59,16 @@ def insert_cart_products(conn, data):
 
 
 def update_cart_products(conn, data):
+    """
+    Update cart item quantity in the database.
+
+    Args:
+        conn: Database connection.
+        data (dict): Data containing quantity, user_id, and product_id.
+
+    Returns:
+        None
+    """
     query = """UPDATE cart_items
             SET quantity = ?
             WHERE cart_id IN (SELECT id FROM carts WHERE user_id = ?)
@@ -44,6 +78,18 @@ def update_cart_products(conn, data):
 
 
 def get_cart_by_user_id(conn, id):
+    """
+    Get cart items by user ID from the database.
+
+    Args:
+        conn: Database connection.
+        id (int): User ID for whom the cart items are retrieved.
+
+    Returns:
+        list: List of cart items containing product ID, product name, quantity, and price.
+        Raises:
+            HTTPException: If no cart items exist for the user.
+    """
     query = """select p.id, p.name, ci.quantity, p.price
         from cart_items ci
         join products p on ci.product_id = p.id
@@ -56,6 +102,16 @@ def get_cart_by_user_id(conn, id):
 
 
 def delete_cart_item(conn, data):
+    """
+    Delete a cart item from the database.
+
+    Args:
+        conn: Database connection.
+        data (dict): Data containing user_id and product_id.
+
+    Returns:
+        None
+    """
     query = """
         DELETE FROM cart_items
         WHERE cart_id IN (SELECT id FROM carts WHERE user_id = ?)
@@ -65,6 +121,16 @@ def delete_cart_item(conn, data):
 
 
 def delete_cart(conn, id):
+    """
+    Delete all cart items for a user from the database.
+
+    Args:
+        conn: Database connection.
+        id (int): User ID for whom the cart is deleted.
+
+    Returns:
+        None
+    """
     query = """DELETE FROM cart_items
                 WHERE cart_id IN (SELECT id FROM carts WHERE user_id = ?);"""
     record_by_id(conn, query, id)
