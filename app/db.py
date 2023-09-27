@@ -30,7 +30,7 @@ class SQLiteConnection:
 
 
 def initialize_connection():
-    db_path = "db_scripts\ecommerce.db"  # Replace with your SQLite database file path
+    db_path = "./db_scripts/ecommerce.db"  # Replace with your SQLite database file path
     pool = SQLiteConnection(db_path, pool_size=5)
     pool.initialize_pool()
     return pool
@@ -43,7 +43,7 @@ def get_all_records(connection, query):
         result = cursor.fetchall()
         return result
     except sqlite3.Error as e:
-        print(f"Error in get all records {e}")
+        abort(make_response(jsonify(message=f"Error in get all records {e}")))
     finally:
         cursor.close()
 
@@ -55,7 +55,7 @@ def get_all_records_by_id(connection, query, id):
         result = cursor.fetchall()
         return result
     except Exception as e:
-        print(f"Error in get all records {e}")
+        abort(make_response(jsonify(message=f"Error in get all records by ID {e}")))
     finally:
         cursor.close()
 
@@ -66,10 +66,9 @@ def check_record(connection, query, params):
         cursor.execute(query, params)
         result = cursor.fetchone()
         connection.commit()
-        breakpoint()
         return result
     except Exception as e:
-        print(f"Error in  check records {e}")
+        abort(make_response(jsonify(message=f"Error in ckeck  records {e}")))
     finally:
         cursor.close()
 
@@ -82,7 +81,7 @@ def record_by_id(connection, query, params):
         connection.commit()
         return result
     except Exception as e:
-        print(f"Error in get records by id {e}")
+        abort(make_response(jsonify(message=f"Error in get  records by ID {e}")))
     finally:
         cursor.close()
 
@@ -95,7 +94,7 @@ def post_record(connection, query, params):
         connection.commit()
         return result
     except Exception as e:
-        print(f"Error in post record {e}")
+        abort(make_response(jsonify(message=f"Error in post records {e}")))
     finally:
         cursor.close()
 
@@ -107,6 +106,6 @@ def update_record(connection, query, params):
         connection.commit()
         return
     except sqlite3.Error as e:
-        print(f"Error in post record {e}")
+        abort(make_response(jsonify(message=f"Error in update records {e}")))
     finally:
         cursor.close()

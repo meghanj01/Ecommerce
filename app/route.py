@@ -215,7 +215,7 @@ def users_by_id(id):
         return jsonify(message=result, status=200)
     elif request.method == "DELETE":
         delete_user(conn, id)
-        return jsonify(message=f"Product id: {id} is deleted successfully", status=200)
+        return jsonify(message=f"User id: {id} is deleted successfully", status=200)
 
 
 @ecommerce.route("/users/<int:id>/cart", methods=["GET", "PUT", "DELETE", "POST"])

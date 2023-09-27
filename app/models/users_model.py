@@ -37,7 +37,7 @@ def insert_user(conn, data):
     """
     query = """ INSERT INTO users (username, password, email, is_admin)
     VALUES (?,?,?,?)"""
-    (result,) = post_record(conn, query, data)
+    result = post_record(conn, query, data)
     if result:
         return result
     abort(make_response(jsonify(message="Unable to insert record", status=400)))

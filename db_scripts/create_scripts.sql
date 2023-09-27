@@ -16,7 +16,7 @@ is_admin BOOLEAN DEFAULT FALSE
 
 -- Create the 'products' table
 -- numeric(10,2) is a number that has 8 digits before the decimal and 2 digits after the decimal.
-CREATE TABLE products(
+CREATE TABLE  IF NOT EXISTS  products(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name VARCHAR(20) NOT NULL UNIQUE,
 description TEXT,
@@ -25,14 +25,14 @@ inventory_quantity INTEGER NOT NULL
 );
 
 -- Create the 'carts' table
-CREATE TABLE carts(
+CREATE TABLE   IF NOT EXISTS carts(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 user_id INTEGER NOT NULL ,
 CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Create the 'orders' table
-CREATE TABLE orders(
+CREATE TABLE  IF NOT EXISTS orders(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 user_id INTEGER NOT NULL,
 order_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -40,7 +40,7 @@ CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Create the 'cart_items' table for the many-to-many relationship between Cart and Product
-CREATE TABLE cart_items(
+CREATE TABLE  IF NOT EXISTS cart_items(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 cart_id INTEGER NOT NULL,
 product_id INTEGER NOT NULL,
@@ -50,7 +50,7 @@ CONSTRAINT fk_products_id FOREIGN KEY (product_id) REFERENCES products(id) ON DE
 );
 
 -- Create the 'order_items' table for the many-to-many relationship between Order and Product
-CREATE TABLE order_items(
+CREATE TABLE  IF NOT EXISTS order_items(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 order_id INTEGER NOT NULL,
 product_id INTEGER NOT NULL,
